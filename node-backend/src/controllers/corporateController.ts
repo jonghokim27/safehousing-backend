@@ -9,9 +9,9 @@ import { parse } from 'node-html-parser';
 import { encode } from 'urlencode';
 import { User } from '../models/User';
 import { CorporateType } from '../configs/enum';
-import { Corporate } from '../models/Corporate';
 import { sendMessage } from '../modules/sqs';
 import { AWS_SQS_REGION, AWS_SQS_URL } from '../configs';
+import { models } from '../models';
 
 /**
  * corporateController - search
@@ -133,7 +133,7 @@ export const request = async(req: Request, res: Response) => {
             });
         }
 
-        let corporate = await Corporate.create({
+        let corporate = await models.Corporate.create({
             UserId: user.id,
             regId: regId,
             type: type,
@@ -177,7 +177,7 @@ export const status = async(req: Request, res: Response) => {
             });
         }
 
-        let corporate = await Corporate.findOne(
+        let corporate = await models.Corporate.findOne(
         {
             logging: false,
             where: {
@@ -210,12 +210,13 @@ export const list = async(req: Request, res: Response) => {
     try{
         let user: User = res.locals.user;
 
-        let corporates = await Corporate.findAll(
+        let corporates = await models.Corporate.findAll(
         {
             logging: false,
             attributes: ['idx', 'regId', 'type', 'status', 'name', 'pdfUrl', 'pdfSummary', 'createdAt'],
             where: {
-                UserId: user.id
+                UserId: user.id,
+                status: 1
             },
             order: [
                 ['idx', 'DESC']

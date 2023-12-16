@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../configs';
 import { Sequelize } from 'sequelize';
 import { getTokenFromReq } from './common';
-import { User } from '../models/User';
+import { models } from '../models';
 
 export interface UserPayload extends jwt.JwtPayload{
     id: string,
@@ -36,7 +36,7 @@ export default async(req: Request, res: Response, next: NextFunction) => {
                     throw "JWT Error";
                 }
 
-                const { count: userCount, rows: userRows } = await User.findAndCountAll({
+                const { count: userCount, rows: userRows } = await models.User.findAndCountAll({
                     logging: false,
                     where: {
                         id: userPayload.id
@@ -50,12 +50,12 @@ export default async(req: Request, res: Response, next: NextFunction) => {
 
                 let user = userRows[0];
             
-                await User.update({
+                await models.User.update({
                     updatedAt: Sequelize.literal("NOW()")
                 }, {
                     logging: false,
                     where: {
-                        id: userPayload.idx
+                        id: userPayload.id
                     },
                     limit: 1
                 })

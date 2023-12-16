@@ -27,7 +27,6 @@ export const genUserId = (provider: string, userId: string): string => {
  */
 export interface SSOUserData{
     userId: string,
-    email: string,
     nickname: string
 };
 
@@ -41,11 +40,9 @@ export default async (provider: string, token: string): Promise<SSOUserData | fa
     try{
         if(provider == "kakao"){
             let kakaoSSOResponse = await axios.get("https://kapi.kakao.com/v2/user/me", {headers: {'Authorization': "Bearer " + token}});
-            
             return {
                 userId: kakaoSSOResponse.data.id,
-                email: kakaoSSOResponse.data.kakao_account.email,
-                nickname: kakaoSSOResponse.data.kakao_account.name
+                nickname: kakaoSSOResponse.data.kakao_account.profile.nickname
             }
         }
         else{

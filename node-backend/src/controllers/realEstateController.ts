@@ -8,10 +8,10 @@ import { Request, Response } from 'express';
 import { parse } from 'node-html-parser';
 import { encode } from 'urlencode';
 import { RealEstateType } from '../configs/enum';
-import { RealEstate } from '../models/RealEstate';
 import { User } from '../models/User';
 import { sendMessage } from '../modules/sqs';
 import { AWS_SQS_REGION, AWS_SQS_URL } from '../configs';
+import { models } from '../models';
 
 /**
  * realEstateController - search
@@ -117,7 +117,7 @@ export const request = async(req: Request, res: Response) => {
             });
         }
 
-        let realEstate = await RealEstate.create({
+        let realEstate = await models.RealEstate.create({
             UserId: user.id,
             regId: regId,
             type: type,
@@ -161,7 +161,7 @@ export const status = async(req: Request, res: Response) => {
             });
         }
 
-        let realEstate = await RealEstate.findOne(
+        let realEstate = await models.RealEstate.findOne(
         {
             logging: false,
             where: {
@@ -194,12 +194,13 @@ export const list = async(req: Request, res: Response) => {
     try{
         let user: User = res.locals.user;
 
-        let realEstates = await RealEstate.findAll(
+        let realEstates = await models.RealEstate.findAll(
         {
             logging: false,
             attributes: ['idx', 'regId', 'type', 'status', 'address', 'pdfUrl', 'pdfSummary', 'createdAt'],
             where: {
-                UserId: user.id
+                UserId: user.id,
+                status: 1
             },
             order: [
                 ['idx', 'DESC']

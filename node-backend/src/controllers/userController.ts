@@ -7,6 +7,7 @@ import ssoAuth, { genUserId, ssoProviders, SSOUserData } from '../modules/ssoAut
 import { Sequelize } from 'sequelize';
 import { genAccessToken } from '../modules/userAuth';
 import { User } from '../models/User';
+import { models } from '../models';
 
 /**
  * userController - login
@@ -40,7 +41,7 @@ export const login = async(req: Request, res: Response) => {
 
         let user: User;
 
-        const {count: userCount, rows: userRows} = await User.findAndCountAll({
+        const {count: userCount, rows: userRows} = await models.User.findAndCountAll({
             logging: false,
             where: {
                 id: id
@@ -50,9 +51,8 @@ export const login = async(req: Request, res: Response) => {
 
         // If user does not exist in DB, create new user
         if(userCount == 0){
-            user = await User.create({
+            user = await models.User.create({
                 id: id,
-                email: ssoUserData.email,
                 name: ssoUserData.nickname,
                 createdAt: new Date()
             }, {
@@ -60,7 +60,7 @@ export const login = async(req: Request, res: Response) => {
             });
         } else{
             user = userRows[0];
-            await User.update({
+            await models.User.update({
                 updatedAt: Sequelize.literal("NOW()")
             }, {
                 logging: false,
@@ -99,9 +99,9 @@ export const profile = async(req: Request, res: Response) => {
             error: false,
             id: user.id,
             name: user.name,
-            email: user.email
         });
     } catch(e: any){
+        console.log(e);
         return res.status(500).json({
             error: true,
             message: "Internal Server Error"
