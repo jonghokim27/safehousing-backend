@@ -11,7 +11,7 @@ import { User } from '../models/User';
 import { CorporateType } from '../configs/enum';
 import { Corporate } from '../models/Corporate';
 import { sendMessage } from '../modules/sqs';
-import { AWS_SQS_CORPORATE_REGION, AWS_SQS_CORPORATE_URL } from '../configs';
+import { AWS_SQS_REGION, AWS_SQS_URL } from '../configs';
 
 /**
  * corporateController - search
@@ -144,7 +144,8 @@ export const request = async(req: Request, res: Response) => {
             logging: false
         })
 
-        let sendMessageRes = await sendMessage(AWS_SQS_CORPORATE_REGION, AWS_SQS_CORPORATE_URL, JSON.stringify({
+        let sendMessageRes = await sendMessage(AWS_SQS_REGION, AWS_SQS_URL, JSON.stringify({
+            type: 'corporate',
             idx: corporate.idx
         }));
         if(!sendMessageRes){

@@ -26,12 +26,8 @@ export const DB_DEFAULT_SCHEMA = process.env.DB_DEFAULT_SCHEMA ? process.env.DB_
 export const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY ? process.env.AWS_ACCESS_KEY : "";
 export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY ? process.env.AWS_SECRET_ACCESS_KEY : "";
 
-export const AWS_SQS_REAL_ESTATE_REGION = "ap-northeast-2";
-export const AWS_SQS_REAL_ESTATE_URL = "https://sqs.ap-northeast-2.amazonaws.com/411535489315/realEstate";
-
-export const AWS_SQS_CORPORATE_REGION = "ap-northeast-2";
-export const AWS_SQS_CORPORATE_URL = "https://sqs.ap-northeast-2.amazonaws.com/411535489315/corporate";
-
+export const AWS_SQS_REGION = "ap-northeast-2";
+export const AWS_SQS_URL = "https://sqs.ap-northeast-2.amazonaws.com/411535489315/safeHousing";
 
 /**
  * Auth

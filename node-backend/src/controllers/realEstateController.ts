@@ -11,9 +11,7 @@ import { RealEstateType } from '../configs/enum';
 import { RealEstate } from '../models/RealEstate';
 import { User } from '../models/User';
 import { sendMessage } from '../modules/sqs';
-import { AWS_SQS_REAL_ESTATE_REGION, AWS_SQS_REAL_ESTATE_URL } from '../configs';
-import { Transaction } from 'sequelize';
-import { sequelize } from '../models';
+import { AWS_SQS_REGION, AWS_SQS_URL } from '../configs';
 
 /**
  * realEstateController - search
@@ -130,7 +128,8 @@ export const request = async(req: Request, res: Response) => {
             logging: false
         })
 
-        let sendMessageRes = await sendMessage(AWS_SQS_REAL_ESTATE_REGION, AWS_SQS_REAL_ESTATE_URL, JSON.stringify({
+        let sendMessageRes = await sendMessage(AWS_SQS_REGION, AWS_SQS_URL, JSON.stringify({
+            type: "realEstate",
             idx: realEstate.idx
         }));
         if(!sendMessageRes){
