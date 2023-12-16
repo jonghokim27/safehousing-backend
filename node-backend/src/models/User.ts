@@ -1,5 +1,6 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type { Corporate, CorporateId } from './Corporate';
 import type { RealEstate, RealEstateId } from './RealEstate';
 
 export interface UserAttributes {
@@ -22,6 +23,18 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   createdAt!: Date;
   updatedAt?: Date;
 
+  // User hasMany Corporate via UserId
+  Corporates!: Corporate[];
+  getCorporates!: Sequelize.HasManyGetAssociationsMixin<Corporate>;
+  setCorporates!: Sequelize.HasManySetAssociationsMixin<Corporate, CorporateId>;
+  addCorporate!: Sequelize.HasManyAddAssociationMixin<Corporate, CorporateId>;
+  addCorporates!: Sequelize.HasManyAddAssociationsMixin<Corporate, CorporateId>;
+  createCorporate!: Sequelize.HasManyCreateAssociationMixin<Corporate>;
+  removeCorporate!: Sequelize.HasManyRemoveAssociationMixin<Corporate, CorporateId>;
+  removeCorporates!: Sequelize.HasManyRemoveAssociationsMixin<Corporate, CorporateId>;
+  hasCorporate!: Sequelize.HasManyHasAssociationMixin<Corporate, CorporateId>;
+  hasCorporates!: Sequelize.HasManyHasAssociationsMixin<Corporate, CorporateId>;
+  countCorporates!: Sequelize.HasManyCountAssociationsMixin;
   // User hasMany RealEstate via UserId
   RealEstates!: RealEstate[];
   getRealEstates!: Sequelize.HasManyGetAssociationsMixin<RealEstate>;

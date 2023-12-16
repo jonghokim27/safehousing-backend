@@ -14,10 +14,13 @@ const router: Router = Router();
 // GET /corporate/search
 router.get("/search", corporateController.search);
 
-// POST /realEstate/request
-// router.post("/request", corporateController.request);
+// POST /corporate/request
+router.post("/request", corporateController.request);
 
-// GET /realEstate/resultList
-// router.get("/list", corporateController.list);
+// GET /corporate/status
+router.get("/status", corporateController.status);
+
+// GET /corporate/resultList
+router.get("/list", corporateController.list);
 
 module.exports = router;
