@@ -12,7 +12,6 @@ import { User } from '../models/User';
 export interface UserPayload extends jwt.JwtPayload{
     id: string,
     name: string,
-    email: string
 };
 
 /**

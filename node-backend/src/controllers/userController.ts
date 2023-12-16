@@ -73,8 +73,7 @@ export const login = async(req: Request, res: Response) => {
    
         let accessToken = genAccessToken({
             id: user.id,
-            name: user.name,
-            email: user.email
+            name: user.name
         });
 
         return res.status(200).send({

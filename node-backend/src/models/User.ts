@@ -6,20 +6,20 @@ import type { RealEstate, RealEstateId } from './RealEstate';
 export interface UserAttributes {
   id: string;
   name: string;
-  email: string;
+  email?: string;
   createdAt: Date;
   updatedAt?: Date;
 }
 
 export type UserPk = "id";
 export type UserId = User[UserPk];
-export type UserOptionalAttributes = "createdAt" | "updatedAt";
+export type UserOptionalAttributes = "email" | "createdAt" | "updatedAt";
 export type UserCreationAttributes = Optional<UserAttributes, UserOptionalAttributes>;
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   id!: string;
   name!: string;
-  email!: string;
+  email?: string;
   createdAt!: Date;
   updatedAt?: Date;
 
@@ -61,7 +61,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
     },
     email: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     createdAt: {
       type: DataTypes.DATE,
