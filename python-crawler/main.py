@@ -1,41 +1,46 @@
 import boto3
-import pymysql
 import constants
+import json
+from issue import Issue
+from corporate import corporate
+from realEstate import realEstate
 
-# Wait for messages from the RealEstate SQS queue
-sqs = boto3.client('sqs')
-queue_url = 'YOUR_QUEUE_URL'
-response = sqs.receive_message(
-    QueueUrl=constants.corporate,
-    WaitTimeSeconds=20,
-    MaxNumberOfMessages=1
+sqs = boto3.client('sqs',
+    aws_access_key_id=constants.AWS_ACCESS_KEY,
+    aws_secret_access_key=constants.AWS_SECRET_ACCESS_KEY,
+    region_name=constants.AWS_SQS_REGION
 )
 
-if 'Messages' in response:
-    for message in response['Messages']:
-        # Connect to MySQL database
-        connection = pymysql.connect(
-            host='YOUR_HOST',
-            user='YOUR_USERNAME',
-            password='YOUR_PASSWORD',
-            database='YOUR_DATABASE'
+while True:
+    try:
+        print("Waiting for message...")
+
+        response = sqs.receive_message(
+            QueueUrl=constants.AWS_SQS_URL,
+            WaitTimeSeconds=20,
+            MaxNumberOfMessages=1
         )
 
-        try:
-            with connection.cursor() as cursor:
-                # Execute select query
-                sql = 'SELECT * FROM your_table'
-                cursor.execute(sql)
-                result = cursor.fetchall()
-                print(result)  # Do something with the result
-        finally:
-            connection.close()
+        if 'Messages' not in response:
+            continue
+        
+        message = response['Messages'][0]
 
-        # Delete the received message from the queue
         receipt_handle = message['ReceiptHandle']
         sqs.delete_message(
-            QueueUrl=queue_url,
+            QueueUrl=constants.AWS_SQS_URL,
             ReceiptHandle=receipt_handle
         )
-else:
-    print('No messages in the queue')
+
+        message_json = json.loads(message['Body'])
+        if(message_json["type"] == "realEstate"):
+            issue = Issue("realEstate", message_json["idx"])
+            realEstate(issue)
+        elif(message_json["type"] == "corporate"):
+            issue = Issue("corporate", message_json["idx"])
+            corporate(issue)
+        del issue
+        
+    except Exception as e:
+        print(e)
+        continue
