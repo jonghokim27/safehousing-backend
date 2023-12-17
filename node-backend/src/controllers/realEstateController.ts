@@ -200,7 +200,7 @@ export const list = async(req: Request, res: Response) => {
             attributes: ['idx', 'regId', 'type', 'status', 'address', 'pdfUrl', 'pdfSummary', 'createdAt'],
             where: {
                 UserId: user.id,
-                status: 1
+                status: 13
             },
             order: [
                 ['idx', 'DESC']
